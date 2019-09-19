@@ -20,6 +20,18 @@ def get_len(line):
         return 0
     return int(ans)
 
+def get_svaba_len(line):
+    start_pos = line.find("SPAN")
+    ans = ""
+    start_pos += 5
+    while line[start_pos].isdigit():
+        ans += line[start_pos]
+        start_pos += 1
+    if ans == "":
+        return 0
+    return int(ans)
+
+
 def get_svtype(line):
     start_pos = line.find("SVTYPE")
     ans = ""
@@ -63,6 +75,8 @@ with open("results/simulated/pacbio.vcf", "r") as pacbio:
             if region_chr != splitted[0] or (region_start >= int(splitted[1]) >= region_end) :
                 continue
         sv = SV(splitted[0], int(splitted[1]), get_len(r), get_svtype(r), get_repeattype(r))
+        if sv.svtype == "INS":
+            continue
         total_length += sv.length
         if get_svtype(r) + " " + get_repeattype(r) not in repeat_type_dict:
             repeat_type_dict[get_svtype(r) + " " + get_repeattype(r)] = 0
@@ -79,13 +93,29 @@ for type in repeat_type_dict.keys():
     repeat_type_found_dict[type] = 0
 
 manta = 0
-with open("results/simulated/manta.vcf", "r") as manta_vcf:
+manta_total = 0
+with open("results/simulated/gridss.passed.vcf", "r") as manta_vcf:
     for r in manta_vcf.readlines():
         if r.startswith("#"):
             continue
         chrom = r.split("\t")[0]
         pos = int(r.split("\t")[1])
-        new_sv = SV(chrom, pos, 0, "", "", "")
+
+#        size = get_svaba_len(r)
+#        if size < 50:
+#            print(size)
+#            continue
+        new_sv = SV(chrom, pos, 0, get_svtype(r), "", "")
+       # if new_sv.svtype != "INS":
+       #     continue
+
+        if ('[' in r.split("\t")[4] or ']' in r.split("\t")[4]):
+            continue
+
+#        if len(r.split("\t")[3]) > 10:
+#            continue
+
+        manta_total += 1
         found = False
 
         for sv in sv_dict[chrom]:
@@ -96,17 +126,23 @@ with open("results/simulated/manta.vcf", "r") as manta_vcf:
                 sv.checked = True
                 manta += 1
                 break
-print("Manta" + str(manta))
+print("svaba " + str(manta))
+print("svaba total " + str(manta_total))
+
+for sv_vect in sv_dict.values():
+    for sv in sv_vect:
+        sv.checked = False
 
 not_in_pacbio = 0
-with open("results/simulated/blackbird.vcf", "r") as my_vcf:
+with open("results/simulated/blackbird_no_N.vcf", "r") as my_vcf:
     for r in my_vcf.readlines():
         if r.startswith("#"):
             continue
         chrom = r.split("\t")[0]
         pos = int(r.split("\t")[1])
         new_sv = SV(chrom, pos, get_len(r), get_svtype(r), "UNKNOWN")
-
+        if new_sv.svtype == "INS":
+            continue
         found = False
         if chrom not in sv_dict:
             sv_dict[chrom] = []
@@ -121,6 +157,7 @@ with open("results/simulated/blackbird.vcf", "r") as my_vcf:
                 break
         if not found:
             not_in_pacbio += 1
+            print(r)
 
 
 
