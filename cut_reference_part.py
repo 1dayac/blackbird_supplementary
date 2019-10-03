@@ -7,10 +7,13 @@ start = int(sys.argv[3])
 end = int(sys.argv[4])
 
 sub_ref = records_dict[chrom][start:end]
+sub_ref.id = chrom + "_" + str(start) + "_" + str(end)
 records_dict[chrom + "_" + str(start) + "_" + str(end)] = sub_ref
 
+print(sub_ref)
 
 with open(sys.argv[5], "w") as output_handle:
     for record in records_dict.values():
+        print(record.id)
         if record.id == chrom + "_" + str(start) + "_" + str(end):
             SeqIO.write(record, output_handle, "fasta")

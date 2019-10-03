@@ -56,7 +56,7 @@ def get_repeattype(line):
 
 
 
-region_defined = True
+region_defined = False
 region_chr = "chr1"
 region_start = 0
 region_end = 300000000
@@ -66,7 +66,7 @@ repeat_type_dict = {}
 repeat_type_found_dict = {}
 
 total_length = 0
-with open("results/simulated/pacbio.vcf", "r") as pacbio:
+with open("results/chm1/pacbio.vcf", "r") as pacbio:
     for r in pacbio.readlines():
         if r.startswith("#"):
             continue
@@ -92,56 +92,62 @@ def Near(sv1, sv2):
 for type in repeat_type_dict.keys():
     repeat_type_found_dict[type] = 0
 
-manta = 0
-manta_total = 0
-with open("results/simulated/gridss.passed.vcf", "r") as manta_vcf:
-    for r in manta_vcf.readlines():
-        if r.startswith("#"):
-            continue
-        chrom = r.split("\t")[0]
-        pos = int(r.split("\t")[1])
-
-#        size = get_svaba_len(r)
-#        if size < 50:
-#            print(size)
-#            continue
-        new_sv = SV(chrom, pos, 0, get_svtype(r), "", "")
-       # if new_sv.svtype != "INS":
-       #     continue
-
-        if ('[' in r.split("\t")[4] or ']' in r.split("\t")[4]):
-            continue
-
-#        if len(r.split("\t")[3]) > 10:
-#            continue
-
-        manta_total += 1
-        found = False
-
-        for sv in sv_dict[chrom]:
-            if sv.checked:
+try:
+    gridss = 0
+    gridss_total = 0
+    with open("results/chm1/gridss.vcf", "r") as manta_vcf:
+        for r in manta_vcf.readlines():
+            if r.startswith("#"):
                 continue
-            if Near(sv, new_sv):
-                found = True
-                sv.checked = True
-                manta += 1
-                break
-print("svaba " + str(manta))
-print("svaba total " + str(manta_total))
+            chrom = r.split("\t")[0]
+            pos = int(r.split("\t")[1])
+
+    #        size = get_svaba_len(r)
+    #        if size < 50:
+    #            print(size)
+    #            continue
+            new_sv = SV(chrom, pos, 0, get_svtype(r), "", "")
+           # if new_sv.svtype != "INS":
+           #     continue
+
+            if not ('[' in r.split("\t")[4] or ']' in r.split("\t")[4]):
+                continue
+
+            #        if ('[' in r.split("\t")[4] or ']' in r.split("\t")[4]):
+    #            continue
+
+    #        if len(r.split("\t")[3]) > 10:
+    #            continue
+
+            gridss_total += 1
+            found = False
+
+            for sv in sv_dict[chrom]:
+                if sv.checked:
+                    continue
+                if Near(sv, new_sv):
+                    found = True
+                    sv.checked = True
+                    gridss += 1
+                    break
+    print("gridss " + str(gridss))
+    print("gridss total " + str(gridss_total))
+except:
+    pass
 
 for sv_vect in sv_dict.values():
     for sv in sv_vect:
         sv.checked = False
 
 not_in_pacbio = 0
-with open("results/simulated/blackbird_no_N.vcf", "r") as my_vcf:
+with open("results/chm1/blackbird.vcf", "r") as my_vcf:
     for r in my_vcf.readlines():
         if r.startswith("#"):
             continue
         chrom = r.split("\t")[0]
         pos = int(r.split("\t")[1])
         new_sv = SV(chrom, pos, get_len(r), get_svtype(r), "UNKNOWN")
-        if new_sv.svtype == "INS":
+        if new_sv.svtype == "DEL":
             continue
         found = False
         if chrom not in sv_dict:
@@ -157,7 +163,7 @@ with open("results/simulated/blackbird_no_N.vcf", "r") as my_vcf:
                 break
         if not found:
             not_in_pacbio += 1
-            print(r)
+#            print(r)
 
 
 
