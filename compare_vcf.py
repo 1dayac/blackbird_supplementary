@@ -13,12 +13,12 @@ def get_len(line):
     start_pos = line.find("SVLEN")
     ans = ""
     start_pos += 6
-    while line[start_pos].isdigit():
+    while line[start_pos].isdigit() or line[start_pos] == "-":
         ans += line[start_pos]
         start_pos += 1
     if ans == "":
         return 0
-    return int(ans)
+    return abs(int(ans))
 
 def get_svaba_len(line):
     start_pos = line.find("SPAN")
@@ -75,8 +75,11 @@ with open("results/chm1/pacbio.vcf", "r") as pacbio:
             if region_chr != splitted[0] or (region_start >= int(splitted[1]) >= region_end) :
                 continue
         sv = SV(splitted[0], int(splitted[1]), get_len(r), get_svtype(r), get_repeattype(r))
+#        if splitted[6] != "PASS":
+#            continue
         if sv.svtype == "INS":
             continue
+
         total_length += sv.length
         if get_svtype(r) + " " + get_repeattype(r) not in repeat_type_dict:
             repeat_type_dict[get_svtype(r) + " " + get_repeattype(r)] = 0
@@ -101,19 +104,19 @@ try:
                 continue
             chrom = r.split("\t")[0]
             pos = int(r.split("\t")[1])
-
-    #        size = get_svaba_len(r)
-    #        if size < 50:
-    #            print(size)
-    #            continue
+            if chrom not in sv_dict.keys():
+                continue
+            size = get_len(r)
+            if size < 50:
+                continue
             new_sv = SV(chrom, pos, 0, get_svtype(r), "", "")
-           # if new_sv.svtype != "INS":
-           #     continue
+#            if new_sv.svtype != "DEL":
+#                continue
 
             if not ('[' in r.split("\t")[4] or ']' in r.split("\t")[4]):
                 continue
 
-            #        if ('[' in r.split("\t")[4] or ']' in r.split("\t")[4]):
+    #        if ('[' in r.split("\t")[4] or ']' in r.split("\t")[4]):
     #            continue
 
     #        if len(r.split("\t")[3]) > 10:
@@ -147,7 +150,7 @@ with open("results/chm1/blackbird.vcf", "r") as my_vcf:
         chrom = r.split("\t")[0]
         pos = int(r.split("\t")[1])
         new_sv = SV(chrom, pos, get_len(r), get_svtype(r), "UNKNOWN")
-        if new_sv.svtype == "DEL":
+        if new_sv.svtype == "INS":
             continue
         found = False
         if chrom not in sv_dict:
@@ -163,7 +166,8 @@ with open("results/chm1/blackbird.vcf", "r") as my_vcf:
                 break
         if not found:
             not_in_pacbio += 1
-#            print(r)
+            #if not_in_pacbio < 200:
+            #    print(r)
 
 
 
