@@ -13,7 +13,7 @@ with open(sys.argv[1], 'r') as input_vcf:
             if r.startswith("##"):
                 output_vcf.write(r)
                 if r.startswith("##INFO=<ID=MATEID"):
-                    output_vcf.write("##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\"")
+                    output_vcf.write("##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\"\n")
                 continue
             if r.startswith("#"):
                 r = r.strip()

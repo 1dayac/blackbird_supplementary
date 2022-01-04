@@ -8,7 +8,7 @@ class SV:
         self.repeat_type = repeat_type
         self.seq = seq.upper()
 
-
+dataset = "simulated"
 def get_len(line):
     start_pos = line.find("SVLEN")
     ans = ""
@@ -56,7 +56,7 @@ def get_repeattype(line):
 
 
 
-region_defined = False
+region_defined = True
 region_chr = "chr1"
 region_start = 0
 region_end = 300000000
@@ -66,7 +66,7 @@ repeat_type_dict = {}
 repeat_type_found_dict = {}
 
 total_length = 0
-with open("results/chm1/pacbio.vcf", "r") as pacbio:
+with open("results/" + dataset + "/pacbio.vcf", "r") as pacbio:
     for r in pacbio.readlines():
         if r.startswith("#"):
             continue
@@ -77,8 +77,8 @@ with open("results/chm1/pacbio.vcf", "r") as pacbio:
         sv = SV(splitted[0], int(splitted[1]), get_len(r), get_svtype(r), get_repeattype(r))
 #        if splitted[6] != "PASS":
 #            continue
-        if sv.svtype == "INS":
-            continue
+        #if sv.svtype == "DEL":
+        #    continue
 
         total_length += sv.length
         if get_svtype(r) + " " + get_repeattype(r) not in repeat_type_dict:
@@ -143,31 +143,36 @@ for sv_vect in sv_dict.values():
         sv.checked = False
 
 not_in_pacbio = 0
-with open("results/chm1/blackbird.vcf", "r") as my_vcf:
+with open("results/" + dataset + "/blackbird_2021.vcf", "r") as my_vcf:
     for r in my_vcf.readlines():
         if r.startswith("#"):
             continue
         chrom = r.split("\t")[0]
+        if region_defined and chrom != region_chr:
+            continue
         pos = int(r.split("\t")[1])
         new_sv = SV(chrom, pos, get_len(r), get_svtype(r), "UNKNOWN")
-        if new_sv.svtype == "INS":
-            continue
+        #if new_sv.svtype == "DEL":
+        #    continue
         found = False
         if chrom not in sv_dict:
             sv_dict[chrom] = []
 
         for sv in sv_dict[chrom]:
+            if Near(sv, new_sv) and sv.checked:
+                print("!!!")
             if sv.checked:
                 continue
             if Near(sv, new_sv):
+
                 found = True
                 sv.checked = True
                 repeat_type_found_dict[sv.svtype + " " + sv.repeat_type] += 1
                 break
         if not found:
             not_in_pacbio += 1
-            #if not_in_pacbio < 200:
-            #    print(r)
+            if not_in_pacbio < 200:
+                print(r)
 
 
 
