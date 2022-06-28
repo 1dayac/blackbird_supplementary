@@ -19,7 +19,7 @@ with open(temp_fasta, 'w') as temp_fasta:
 subprocess.call(["/programs/RepeatMasker_4-1-0/RepeatMasker", "temp.fasta"])
 
 d = {}
-with open("contigs.fasta.out", 'r') as repeat_master_out:
+with open("temp.fasta.out", 'r') as repeat_master_out:
     repeat_master_out.readline()
     repeat_master_out.readline()
     repeat_master_out.readline()
