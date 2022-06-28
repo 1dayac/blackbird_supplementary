@@ -41,11 +41,12 @@ for k,v in d.items():
 vcf_out_file = VariantFile(vfc_out_filename, 'w', header=header)
 
 for rec in vcf_in_file.fetch():
-    if 'SVLEN' not in rec.info:
+    if 'REPEATTYPE' not in rec.info:
         if rec.id in d_final:
             rec.info['REPEATTYPE'] = d_final[rec.id]
         else:
             rec.info['REPEATTYPE'] = "NotMasked"
+
 
     vcf_out_file.write(rec)
 
