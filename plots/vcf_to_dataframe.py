@@ -32,10 +32,12 @@ with open(out_dataframe, 'w') as out_handle:
             wrong = wrong_d[k]
         else:
             wrong = 0
-        out_handle.write(",".join([method_name, sv_type, k, str(correct), str(wrong)]))
-        out_handle.write('\n')
+        if correct + wrong > 30:
+            out_handle.write(",".join([method_name, sv_type, k, str(correct), str(wrong)]))
+            out_handle.write('\n')
 
     for k,v in wrong_d.items():
         if k not in correct_d:
-            out_handle.write(",".join([method_name, sv_type, k, str(0), str(v)]))
-            out_handle.write('\n')
+            if v > 30:
+                out_handle.write(",".join([method_name, sv_type, k, str(0), str(v)]))
+                out_handle.write('\n')
