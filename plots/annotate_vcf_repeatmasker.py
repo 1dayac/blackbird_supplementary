@@ -15,7 +15,10 @@ temp_fasta = "temp.fasta"
 with open(temp_fasta, 'w') as temp_fasta:
     for rec in vcf_in_file.fetch():
         temp_fasta.write(">" + rec.id + "\n")
-        temp_fasta.write(rec.info['SEQ'] + "\n")
+        try:
+            temp_fasta.write(rec.info['SEQ'] + "\n")
+        except:
+            temp_fasta.write(rec.alts[0] + "\n")
 subprocess.call(["/programs/RepeatMasker_4-1-0/RepeatMasker", "temp.fasta"])
 
 d = {}
