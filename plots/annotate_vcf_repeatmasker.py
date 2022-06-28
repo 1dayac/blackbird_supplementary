@@ -1,10 +1,15 @@
 from pysam import VariantFile
 import sys
-#annotate_vcf_repeatmasker.vcf <vcf_file> <new_vcf_file>
+#annotate_vcf_repeatmasker.vcf <vcf_file> <new_vcf_file> <type>
 import subprocess
 
 vfc_filename = sys.argv[1]
 vfc_out_filename = sys.argv[2]
+type = "None"
+try:
+    type = sys.argv[3]
+except:
+    pass
 
 vcf_in_file = VariantFile(vfc_filename)
 header = vcf_in_file.header
@@ -15,10 +20,13 @@ temp_fasta = "temp.fasta"
 with open(temp_fasta, 'w') as temp_fasta:
     for rec in vcf_in_file.fetch():
         temp_fasta.write(">" + rec.id + "\n")
-        try:
-            temp_fasta.write(rec.info['SEQ'] + "\n")
-        except:
-            temp_fasta.write(rec.alts[0] + "\n")
+        if type == "Deletions":
+            temp_fasta.write(rec.ref + "\n")
+        else:
+            try:
+                temp_fasta.write(rec.info['SEQ'] + "\n")
+            except:
+                temp_fasta.write(rec.alts[0] + "\n")
 subprocess.call(["/programs/RepeatMasker_4-1-0/RepeatMasker", "temp.fasta"])
 
 d = {}
