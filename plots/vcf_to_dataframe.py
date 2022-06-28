@@ -35,7 +35,7 @@ with open(out_dataframe, 'w') as out_handle:
         out_handle.write(",".join([method_name, sv_type, k, str(correct), str(wrong)]))
         out_handle.write('\n')
 
-    for k,v in wrong.items():
+    for k,v in wrong_d.items():
         if k not in correct_d:
             out_handle.write(",".join([method_name, sv_type, k, str(0), str(v)]))
             out_handle.write('\n')
