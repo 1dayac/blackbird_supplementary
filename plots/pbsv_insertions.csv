@@ -1,0 +1,10 @@
+Method,SV type,RepeatType,Called,NotCalled
+PBSV,Insertions,NotMasked,1148,740
+PBSV,Insertions,Simple_repeat,911,567
+PBSV,Insertions,LINE/L1,211,150
+PBSV,Insertions,SINE/Alu,1040,634
+PBSV,Insertions,Low_complexity,102,58
+PBSV,Insertions,Complex,510,344
+PBSV,Insertions,LTR/ERV1,81,35
+PBSV,Insertions,Retroposon/SVA,133,48
+PBSV,Insertions,LTR/ERVL-MaLR,35,19

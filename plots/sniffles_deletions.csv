@@ -1,0 +1,10 @@
+Method,SV type,RepeatType,Called,NotCalled
+Sniffles,Deletions,Simple_repeat,420,261
+Sniffles,Deletions,SINE/Alu,974,193
+Sniffles,Deletions,Complex,393,171
+Sniffles,Deletions,NotMasked,773,560
+Sniffles,Deletions,LINE/L1,207,73
+Sniffles,Deletions,LTR/ERVL-MaLR,39,16
+Sniffles,Deletions,Retroposon/SVA,63,40
+Sniffles,Deletions,LTR/ERV1,81,32
+Sniffles,Deletions,Low_complexity,25,16

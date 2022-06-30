@@ -1,0 +1,10 @@
+Method,SV type,RepeatType,Called,NotCalled
+PBSV,Deletions,NotMasked,792,541
+PBSV,Deletions,SINE/Alu,970,197
+PBSV,Deletions,Complex,405,159
+PBSV,Deletions,Simple_repeat,428,253
+PBSV,Deletions,LINE/L1,203,77
+PBSV,Deletions,LTR/ERVL-MaLR,38,17
+PBSV,Deletions,Retroposon/SVA,66,37
+PBSV,Deletions,LTR/ERV1,78,35
+PBSV,Deletions,Low_complexity,25,16
