@@ -1,0 +1,10 @@
+Method,SV type,RepeatType,Called,NotCalled
+Blackbird,Insertions,NotMasked,1272,616
+Blackbird,Insertions,Simple_repeat,925,553
+Blackbird,Insertions,LINE/L1,248,113
+Blackbird,Insertions,SINE/Alu,1156,518
+Blackbird,Insertions,Low_complexity,112,48
+Blackbird,Insertions,Complex,587,267
+Blackbird,Insertions,LTR/ERV1,87,29
+Blackbird,Insertions,Retroposon/SVA,132,49
+Blackbird,Insertions,LTR/ERVL-MaLR,39,15

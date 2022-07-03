@@ -1,0 +1,10 @@
+Method,SV type,RepeatType,Called,NotCalled
+Blackbird,Deletions,NotMasked,907,426
+Blackbird,Deletions,SINE/Alu,1063,104
+Blackbird,Deletions,Simple_repeat,466,215
+Blackbird,Deletions,Complex,473,91
+Blackbird,Deletions,LINE/L1,237,43
+Blackbird,Deletions,LTR/ERVL-MaLR,42,13
+Blackbird,Deletions,Retroposon/SVA,65,38
+Blackbird,Deletions,Low_complexity,27,14
+Blackbird,Deletions,LTR/ERV1,89,24
